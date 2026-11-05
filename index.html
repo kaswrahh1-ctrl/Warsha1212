@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WARSHa PRO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+:root{--bg:#0b1020;--side:#111a2d;--panel:#121d31;--line:#263650;--text:#e8edf7;--muted:#91a0b9;--accent:#55c5a5;--green:#2c9c82;--red:#f07878;--yellow:#e9bd65;--blue:#78a9ef}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Cairo,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:245px;background:var(--side);border-left:1px solid var(--line);padding:22px 15px;overflow:auto;z-index:10}
+.brand{padding:5px 12px 22px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.brand h1{color:var(--accent);font-size:25px}
+.brand p{color:var(--muted);font-size:11px}
+.nav-title{color:#66758e;font-size:11px;padding:0 12px;margin:18px 0 8px}
+.nav{width:100%;border:0;background:transparent;color:#aebbd0;padding:11px 13px;border-radius:10px;text-align:right;display:flex;gap:12px;align-items:center;margin:3px 0;font-size:13px}
+.nav:hover,.nav.active{background:#203b4a;color:var(--accent)}
+.main{margin-right:245px;width:calc(100% - 245px);padding:25px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;gap:12px}
+.topbar h2{font-size:23px}
+.topbar p{font-size:12px;color:var(--muted)}
+.top-actions{display:flex;gap:8px;align-items:center}
+.pill{background:#153b35;color:var(--accent);padding:7px 13px;border-radius:20px;font-size:11px}
+.btn,.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:9px 13px;border-radius:9px}
+.btn.primary{background:var(--green);border-color:var(--green);color:#061711;font-weight:800}
+.btn.danger{color:var(--red)}
+.btn.small{padding:5px 9px;font-size:11px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px}
+.stat-label{color:var(--muted);font-size:12px}
+.stat h3{font-size:25px;margin:10px 0 3px}
+.stat small{color:var(--accent);font-size:11px}
+.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:15px}
+.panel{margin-bottom:16px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.panel-head h3{font-size:15px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
+th,td{text-align:right;padding:12px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);background:#101a2c}
+tbody tr:hover{background:#192840}
+.tag{padding:4px 9px;border-radius:20px;background:#263650;font-size:10px}
+.tag.green{background:#153b35;color:#69d9b6}
+.tag.yellow{background:#42351d;color:#f0c46c}
+.tag.red{background:#45252d;color:#f28c98}
+.tag.blue{background:#1d3454;color:#91baff}
+.toolbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.search{width:300px;max-width:100%;background:#0d1729;border:1px solid var(--line);color:white;padding:10px;border-radius:9px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick{background:#17253a;border:1px solid var(--line);color:white;padding:14px;border-radius:11px;text-align:right}
+.quick b{display:block;color:var(--accent);font-size:12px}
+.quick span{font-size:10px;color:var(--muted)}
+.summary-line{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}
+.summary-line strong{color:var(--accent)}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+.modal-back{display:none;position:fixed;inset:0;background:#020611d9;z-index:30;align-items:center;justify-content:center;padding:15px}
+.modal-back.show{display:flex}
+.modal{background:var(--side);border:1px solid var(--line);border-radius:16px;padding:20px;width:min(650px,100%);max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;margin-bottom:18px}
+.modal-head h3{font-size:17px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;color:var(--muted)}
+.field input,.field select,.field textarea{background:#0d1729;border:1px solid var(--line);color:white;padding:10px;border-radius:9px;width:100%}
+.field textarea{min-height:75px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.notice{padding:12px;background:#153b35;border-radius:9px;color:#81e0c4;font-size:12px;margin-bottom:15px}
+.subtext{font-size:11px;color:var(--muted)}
+.mobile-menu{display:none}
+.footer{text-align:center;color:#62718a;font-size:10px;padding:20px}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:700px){.sidebar{transform:translateX(105%);transition:.2s;width:255px}.sidebar.open{transform:translateX(0)}.main{margin:0;width:100%;padding:15px 12px}.mobile-menu{display:inline-block}.topbar h2{font-size:18px}.pill{display:none}.stat{padding:12px}.stat h3{font-size:20px}.quick-grid{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><h1>WARSHa PRO</h1><p>Mobile Repair Shop Manager</p></div>
+<div class="nav-title">القائمة الرئيسية</div>
+<button class="nav active" data-page="dashboard">▦　لوحة التحكم</button>
+<button class="nav" data-page="repairs">🔧　الصيانة والأجهزة</button>
+<button class="nav" data-page="customers">♙　العملاء</button>
+<button class="nav" data-page="inventory">▤　المخزون</button>
+<div class="nav-title">الإدارة المالية</div>
+<button class="nav" data-page="sales">🛒　المبيعات</button>
+<button class="nav" data-page="purchases">📦　المشتريات</button>
+<button class="nav" data-page="expenses">↘　المصروفات</button>
+<button class="nav" data-page="cashbox">▣　الخزينة</button>
+<button class="nav" data-page="reports">▥　التقارير والأرباح</button>
+<div class="nav-title">النظام</div>
+<button class="nav" data-page="settings">⚙　الإعدادات والنسخ الاحتياطي</button>
+</aside>
+<main class="main">
+<header class="topbar">
+<div style="display:flex;align-items:center;gap:10px">
+<button class="iconbtn mobile-menu" id="menuBtn">☰</button>
+<div><h2 id="heading">لوحة التحكم</h2><p id="date"></p></div>
+</div>
+<div class="top-actions"><span class="pill">● النظام يعمل محلياً</span><button class="btn" onclick="backup()">نسخة احتياطية</button></div>
+</header>
+<section id="content"></section>
+<div class="footer">WARSHa PRO • Local Mobile Repair Management</div>
+</main>
+</div>
+<div class="modal-back" id="modalBack">
+<div class="modal">
+<div class="modal-head"><h3 id="modalTitle">إضافة سجل</h3><button class="iconbtn" onclick="closeModal()">✕</button></div>
+<form id="recordForm"><div class="form-grid" id="formFields"></div>
+<div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">إلغاء</button><button type="submit" class="btn primary">حفظ البيانات</button></div></form>
+</div></div>
+<script>
+const KEY='WARSHa_PRO_DATA';
+const today=()=>new Date().toISOString().slice(0,10);
+const seed={
+repairs:[
+{id:1001,customer:'أحمد محمد',phone:'01012345678',device:'iPhone 13',issue:'تغيير شاشة',status:'قيد الصيانة',cost:1800,price:2500,paid:1000,date:today()},
+{id:1002,customer:'محمد علي',phone:'01123456789',device:'Samsung A54',issue:'عطل شحن',status:'تم الإصلاح',cost:300,price:650,paid:650,date:today()},
+{id:1003,customer:'محمود حسن',phone:'01234567890',device:'Xiaomi Note 12',issue:'فصل باور',status:'انتظار قطع غيار',cost:200,price:900,paid:0,date:today()}],
+customers:[{id:1,name:'أحمد محمد',phone:'01012345678',address:'القاهرة'},{id:2,name:'محمد علي',phone:'01123456789',address:'الجيزة'}],
+inventory:[{id:1,name:'شاشة iPhone 13',sku:'IP13-SCR',quantity:5,min:2,buy:1800,sell:2300},{id:2,name:'بطارية Samsung A54',sku:'SA54-BAT',quantity:8,min:3,buy:450,sell:600},{id:3,name:'كونكتور شحن Type C',sku:'USB-C',quantity:20,min:5,buy:80,sell:130}],
+sales:[],purchases:[],expenses:[],cashbox:[]};
+let db=loadDB(),page='dashboard',editing=null,searchTerm='';
+function loadDB(){try{return {...structuredClone(seed),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(seed)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
+function money(n){return (Number(n)||0).toLocaleString('en-US')+' ج.م'}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function sum(a,k){return a.reduce((s,x)=>s+(Number(x[k])||0),0)}
+function cls(s){return s==='تم الإصلاح'||s==='تم التسليم'?'green':s==='قيد الصيانة'?'blue':s==='انتظار قطع غيار'?'yellow':''}
+const pageNames={dashboard:'لوحة التحكم',repairs:'الصيانة والأجهزة',customers:'العملاء',inventory:'المخزون',sales:'المبيعات',purchases:'المشتريات',expenses:'المصروفات',cashbox:'الخزينة',reports:'التقارير والأرباح',settings:'الإعدادات والنسخ الاحتياطي'};
+document.getElementById('date').textContent=new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.getElementById('menuBtn').onclick=()=>document.getElementById('sidebar').classList.toggle('open');
+function go(p){page=p;searchTerm='';document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===p));document.getElementById('heading').textContent=pageNames[p];document.getElementById('sidebar').classList.remove('open');render()}
+function stat(label,value,icon,sub=''){return `<div class="stat"><div class="stat-label">${icon}　${label}</div><h3>${value}</h3><small>${sub}</small></div>`}
+function panel(title,body,action=''){return `<div class="panel"><div class="panel-head"><h3>${title}</h3>${action}</div>${body}</div>`}
+function table(head,rows){return `<div class="table-wrap"><table><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows||`<tr><td colspan="${head.length}" class="empty">لا توجد بيانات</td></tr>`}</tbody></table></div>`}
+function toolbar(type){return `<div class="toolbar"><input class="search" id="searchInput" placeholder="ابحث في السجلات..." value="${esc(searchTerm)}"><button class="btn primary" onclick="openForm('${type}')">＋ إضافة جديد</button></div>`}
+function filtered(arr,keys){let q=searchTerm.toLowerCase().trim();return arr.filter(x=>!q||keys.some(k=>String(x[k]??'').toLowerCase().includes(q)))}
+function bindSearch(){let el=document.getElementById('searchInput');if(el)el.oninput=e=>{searchTerm=e.target.value;render();let n=document.getElementById('searchInput');n.focus();n.setSelectionRange(searchTerm.length,searchTerm.length)}}
+function render(){
+let c=document.getElementById('content');
+if(page==='dashboard'){
+let income=sum(db.sales,'total')+sum(db.repairs,'paid'),out=sum(db.purchases,'total')+sum(db.expenses,'amount');
+let recent=db.repairs.slice(-5).reverse().map(x=>`<tr><td>#${x.id}</td><td>${esc(x.customer)}</td><td>${esc(x.device)}</td><td><span class="tag ${cls(x.status)}">${esc(x.status)}</span></td><td>${money(x.price)}</td></tr>`).join('');
+c.innerHTML=`<div class="stats">${stat('عمليات الصيانة',db.repairs.length,'🔧','كل الأجهزة المسجلة')}${stat('أجهزة قيد المتابعة',db.repairs.filter(x=>x.status!=='تم التسليم').length,'📱','تحتاج متابعة')}${stat('إجمالي المقبوضات',money(income),'↗','الصيانة والمبيعات')}${stat('صافي الحركة التقريبي',money(income-out),'▣','بعد المشتريات والمصروفات')}</div>
+<div class="grid2">${panel('آخر عمليات الصيانة',table(['رقم','العميل','الجهاز','الحالة','المبلغ'],recent),`<button class="btn small" onclick="go('repairs')">عرض الكل</button>`)}
+${panel('اختصارات سريعة',`<div class="quick-grid"><button class="quick" onclick="openForm('repairs')"><b>＋ استلام جهاز</b><span>تسجيل عملية صيانة</span></button><button class="quick" onclick="openForm('sales')"><b>＋ فاتورة بيع</b><span>تسجيل عملية بيع</span></button><button class="quick" onclick="openForm('customers')"><b>＋ عميل جديد</b><span>إضافة عميل</span></button><button class="quick" onclick="openForm('expenses')"><b>＋ مصروف</b><span>تسجيل مصروف</span></button><button class="quick" onclick="go('inventory')"><b>▤ المخزون</b><span>متابعة قطع الغيار</span></button><button class="quick" onclick="go('reports')"><b>▥ التقارير</b><span>مراجعة الأداء</span></button></div>`)}
+</div><div class="grid2">${panel('حالة الصيانة',`<div class="summary-line"><span>قيد الصيانة</span><strong>${db.repairs.filter(x=>x.status==='قيد الصيانة').length}</strong></div><div class="summary-line"><span>انتظار قطع غيار</span><strong>${db.repairs.filter(x=>x.status==='انتظار قطع غيار').length}</strong></div><div class="summary-line"><span>تم الإصلاح</span><strong>${db.repairs.filter(x=>x.status==='تم الإصلاح').length}</strong></div><div class="summary-line"><span>تم التسليم</span><strong>${db.repairs.filter(x=>x.status==='تم التسليم').length}</strong></div>`)}
+${panel('تنبيهات المخزون',db.inventory.filter(x=>x.quantity<=x.min).map(x=>`<div class="summary-line"><span>${esc(x.name)}</span><strong style="color:var(--red)">المتبقي ${x.quantity}</strong></div>`).join('')||'<div class="empty">المخزون بحالة جيدة</div>')}</div>`;
+}
+else if(page==='repairs'){
+let rows=filtered(db.repairs,['customer','phone','device','issue','status']).map(x=>`<tr><td>#${x.id}</td><td>${esc(x.customer)}<br><small>${esc(x.phone)}</small></td><td>${esc(x.device)}</td><td>${esc(x.issue)}</td><td><span class="tag ${cls(x.status)}">${esc(x.status)}</span></td><td>${money(x.price)}</td><td>${money(x.paid)}</td><td>${esc(x.date)}</td><td><button class="btn small" onclick="editRecord('repairs',${x.id})">تعديل</button> <button class="btn small danger" onclick="del('repairs',${x.id})">حذف</button></td></tr>`).join('');
+c.innerHTML=`<h3 style="margin-bottom:15px">إدارة الصيانة واستلام الأجهزة</h3>${toolbar('repairs')}${panel('سجل الصيانة',table(['رقم','العميل','الجهاز','العطل','الحالة','الإجمالي','المدفوع','التاريخ','إجراءات'],rows))}`;bindSearch();
+}
+else if(page==='customers'){
+let rows=filtered(db.customers,['name','phone','address']).map(x=>`<tr><td>${x.id}</td><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${esc(x.address)}</td><td>${db.repairs.filter(r=>r.phone===x.phone).length}</td><td><button class="btn small" onclick="editRecord('customers',${x.id})">تعديل</button> <button class="btn small danger" onclick="del('customers',${x.id})">حذف</button></td></tr>`).join('');
+c.innerHTML=`<h3 style="margin-bottom:15px">قاعدة بيانات العملاء</h3>${toolbar('customers')}${panel('العملاء المسجلون',table(['رقم','الاسم','الهاتف','العنوان','عمليات الصيانة','إجراءات'],rows))}`;bindSearch();
+}
+else if(page==='inventory'){
+let rows=filtered(db.inventory,['name','sku']).map(x=>`<tr><td>${x.id}</td><td>${esc(x.name)}</td><td>${esc(x.sku)}</td><td>${x.quantity}</td><td>${x.min}</td><td>${money(x.buy)}</td><td>${money(x.sell)}</td><td><span class="tag ${x.quantity<=x.min?'red':'green'}">${x.quantity<=x.min?'مخزون منخفض':'متوفر'}</span></td><td><button class="btn small" onclick="editRecord('inventory',${x.id})">تعديل</button> <button class="btn small danger" onclick="del('inventory',${x.id})">حذف</button></td></tr>`).join('');
+c.innerHTML=`<h3 style="margin-bottom:15px">إدارة قطع الغيار والمخزون</h3>${toolbar('inventory')}${panel('الأصناف',table(['رقم','الصنف','الكود','الكمية','حد التنبيه','الشراء','البيع','الحالة','إجراءات'],rows))}`;bindSearch();
+}
+else if(['sales','purchases','expenses'].includes(page)){
+let cfg={sales:{title:'فواتير المبيعات',fields:['date','item','customer','quantity','total'],heads:['التاريخ','البيان','العميل','الكمية','الإجمالي']},purchases:{title:'سجل المشتريات',fields:['date','item','supplier','quantity','total'],heads:['التاريخ','الصنف','المورد','الكمية','الإجمالي']},expenses:{title:'مصروفات الورشة',fields:['date','category','description','amount'],heads:['التاريخ','البند','التفاصيل','المبلغ']}}[page];
+let rows=filtered(db[page],cfg.fields).map(x=>`<tr>${cfg.fields.map(f=>`<td>${f==='total'||f==='amount'?money(x[f]):esc(x[f])}</td>`).join('')}<td><button class="btn small danger" onclick="del('${page}',${x.id})">حذف</button></td></tr>`).join('');
+c.innerHTML=`<h3 style="margin-bottom:15px">${cfg.title}</h3>${toolbar(page)}${panel(cfg.title,table([...cfg.heads,'إجراءات'],rows))}`;bindSearch();
+}
+else if(page==='cashbox'){
+let incoming=sum(db.sales,'total')+sum(db.repairs,'paid'),outgoing=sum(db.purchases,'total')+sum(db.expenses,'amount')+sum(db.cashbox.filter(x=>x.type==='سحب'),'amount')-sum(db.cashbox.filter(x=>x.type==='إيداع'),'amount');
+let rows=db.cashbox.slice().reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.description)}</td><td>${money(x.amount)}</td></tr>`).join('');
+c.innerHTML=`<h3 style="margin-bottom:15px">الخزينة وحركة النقدية</h3><div class="stats">${stat('المقبوضات',money(incoming),'↗')}${stat('المدفوعات',money(outgoing),'↘')}${stat('الرصيد التقريبي',money(incoming-outgoing),'▣')}${stat('الحركات اليدوية',db.cashbox.length,'≡')}</div>${toolbar('cashbox')}${panel('سجل الحركات اليدوية',table(['التاريخ','النوع','البيان','المبلغ'],rows))}`;
+}
+else if(page==='reports'){
+let income=sum(db.sales,'total')+sum(db.repairs,'paid'),purchase=sum(db.purchases,'total'),expense=sum(db.expenses,'amount'),cost=sum(db.repairs,'cost'),profit=income-purchase-expense-cost;
+c.innerHTML=`<h3 style="margin-bottom:15px">التقارير والأرباح</h3><div class="stats">${stat('الإيرادات',money(income),'↗')}${stat('المشتريات',money(purchase),'📦')}${stat('المصروفات',money(expense),'↘')}${stat('صافي الحركة التقديري',money(profit),'▥')}</div>${panel('ملخص الأداء المالي',`<div class="summary-line"><span>مقبوضات الصيانة والمبيعات</span><strong>${money(income)}</strong></div><div class="summary-line"><span>تكلفة الإصلاح المسجلة</span><strong>${money(cost)}</strong></div><div class="summary-line"><span>المشتريات</span><strong>${money(purchase)}</strong></div><div class="summary-line"><span>المصروفات</span><strong>${money(expense)}</strong></div><div class="summary-line"><b>صافي الحركة التقديري</b><strong>${money(profit)}</strong></div><p class="subtext" style="margin-top:12px">الأرقام تقديرية وتعتمد على البيانات المسجلة، وليست قائمة دخل محاسبية معتمدة.</p>`)}${panel('ملخص التشغيل',`<div class="summary-line"><span>عمليات الصيانة</span><strong>${db.repairs.length}</strong></div><div class="summary-line"><span>العملاء</span><strong>${db.customers.length}</strong></div><div class="summary-line"><span>أصناف المخزون</span><strong>${db.inventory.length}</strong></div><div class="summary-line"><span>فواتير البيع</span><strong>${db.sales.length}</strong></div>`)}`;
+}
+else if(page==='settings'){
+c.innerHTML=`<h3 style="margin-bottom:15px">الإعدادات والنسخ الاحتياطي</h3>${panel('إدارة بيانات البرنامج',`<div class="notice">يتم حفظ البيانات داخل المتصفح على نفس الجهاز. احتفظ بنسخة احتياطية دورية.</div><div class="toolbar"><div><b>تصدير نسخة احتياطية</b><p class="subtext">تحميل جميع البيانات في ملف JSON.</p></div><button class="btn primary" onclick="backup()">تحميل النسخة الاحتياطية</button></div><div class="toolbar"><div><b>استيراد نسخة احتياطية</b><p class="subtext">استعادة بيانات من ملف سابق.</p></div><input type="file" id="restoreFile" accept=".json" style="max-width:220px"></div><div class="toolbar"><div><b style="color:var(--red)">إعادة ضبط البرنامج</b><p class="subtext">إرجاع بيانات العرض التجريبية.</p></div><button class="btn danger" onclick="resetData()">إعادة ضبط البيانات</button></div>`)}${panel('معلومات النظام',`<div class="summary-line"><span>الاسم</span><strong>WARSHa PRO</strong></div><div class="summary-line"><span>الإصدار</span><strong>1.0 Web Preview</strong></div><div class="summary-line"><span>التخزين</span><strong>Local Storage</strong></div>`)}`;
+document.getElementById('restoreFile').onchange=restore;
+}
+}
+const schemas={
+repairs:{title:'عملية صيانة',fields:[['customer','اسم العميل','text',1],['phone','رقم الهاتف','tel',1],['device','نوع الجهاز','text',1],['issue','العطل','text',1],['status','حالة الجهاز','select',1,['قيد الصيانة','انتظار قطع غيار','تم الإصلاح','تم التسليم']],['price','إجمالي المطلوب','number',1],['cost','تكلفة الإصلاح','number'],['paid','المبلغ المدفوع','number'],['date','تاريخ الاستلام','date'],['notes','ملاحظات','textarea']]},
+customers:{title:'عميل',fields:[['name','اسم العميل','text',1],['phone','رقم الهاتف','tel',1],['address','العنوان','text'],['notes','ملاحظات','textarea']]},
+inventory:{title:'صنف مخزون',fields:[['name','اسم الصنف','text',1],['sku','كود الصنف','text'],['quantity','الكمية','number',1],['min','حد التنبيه','number'],['buy','سعر الشراء','number'],['sell','سعر البيع','number']]},
+sales:{title:'فاتورة بيع',fields:[['date','التاريخ','date'],['item','البيان / الصنف','text',1],['customer','العميل','text'],['quantity','الكمية','number'],['total','الإجمالي','number',1]]},
+purchases:{title:'فاتورة مشتريات',fields:[['date','التاريخ','date'],['item','الصنف','text',1],['supplier','المورد','text'],['quantity','الكمية','number'],['total','الإجمالي','number',1]]},
+expenses:{title:'مصروف',fields:[['date','التاريخ','date'],['category','بند المصروف','text',1],['description','التفاصيل','text'],['amount','المبلغ','number',1]]},
+cashbox:{title:'حركة نقدية',fields:[['date','التاريخ','date'],['type','نوع الحركة','select',1,['إيداع','سحب']],['description','البيان','text',1],['amount','المبلغ','number',1]]}
+};
+function openForm(type,id=null){
+editing=id;let schema=schemas[type];if(!schema)return;
+document.getElementById('modalTitle').textContent=(id?'تعديل ':'إضافة ')+schema.title;
+let record=id?db[type].find(x=>x.id===id):{};
+document.getElementById('formFields').innerHTML=schema.fields.map(([key,label,kind,required,options])=>{
+let value=record?.[key]??(key==='date'?today():key==='status'?'قيد الصيانة':'');
+let input=kind==='select'?`<select name="${key}" ${required?'required':''}>${options.map(o=>`<option ${value===o?'selected':''}>${o}</option>`).join('')}</select>`:kind==='textarea'?`<textarea name="${key}">${esc(value)}</textarea>`:`<input name="${key}" type="${kind}" value="${esc(value)}" ${required?'required':''} ${kind==='number'?'min="0" step="0.01"':''}>`;
+return `<div class="field ${kind==='textarea'?'full':''}"><label>${label}</label>${input}</div>`;
+}).join('');
+document.getElementById('modalBack').classList.add('show');
+document.getElementById('recordForm').dataset.type=type;
+}
+function closeModal(){document.getElementById('modalBack').classList.remove('show')}
+function editRecord(type,id){openForm(type,id)}
+document.getElementById('recordForm').onsubmit=e=>{
+e.preventDefault();let form=e.target,type=form.dataset.type,fd=new FormData(form),obj={};
+for(let [k,v] of fd.entries())obj[k]=['price','cost','paid','quantity','min','buy','sell','total','amount'].includes(k)?Number(v):v;
+if(type==='sales'||type==='purchases'){
+let item=db.inventory.find(x=>x.name===obj.item);
+if(item&&type==='sales'){if(item.quantity<(obj.quantity||0)){alert('الكمية المتاحة غير كافية');return}item.quantity-=obj.quantity||0}
+if(item&&type==='purchases')item.quantity+=obj.quantity||0;
+}
+if(type==='repairs'&&!db.customers.some(x=>x.phone===obj.phone))db.customers.push({id:Date.now(),name:obj.customer,phone:obj.phone,address:''});
+if(type==='cashbox'&&obj.type==='سحب')obj.amount=-obj.amount;
+if(editing){let i=db[type].findIndex(x=>x.id===editing);db[type][i]={...db[type][i],...obj}}
+else{obj.id=Date.now();db[type].push(obj)}
+save();closeModal();render();
+};
+function del(type,id){if(!confirm('هل تريد حذف هذا السجل؟'))return;db[type]=db[type].filter(x=>x.id!==id);save();render()}
+function backup(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='WARSHa-PRO-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function restore(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d.repairs||!d.inventory)throw Error();db={...structuredClone(seed),...d};save();alert('تم استيراد النسخة الاحتياطية');render()}catch(err){alert('ملف النسخة الاحتياطية غير صالح')}};r.readAsText(file)}
+function resetData(){if(confirm('سيتم حذف البيانات الحالية. هل تريد المتابعة؟')){db=structuredClone(seed);save();render()}}
+render();
+</script>
+</body>
+</html>
